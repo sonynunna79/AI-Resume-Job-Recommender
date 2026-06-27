@@ -28,11 +28,10 @@ if file:
 
 
     st.write(resume_text)
+resume_text = st.text_area("Paste your resume text")
+job, score = recommend(resume_text)
 
+st.success("Recommended Job: " + job)
 
-    job = recommend(resume_text)
-
-
-    st.success(
-        "Recommended Job: " + job
-    )
+st.info("Match Score: " + str(score) + "%")
+    
