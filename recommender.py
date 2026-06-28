@@ -9,9 +9,8 @@ def recommend(resume):
 
     vectorizer = TfidfVectorizer()
 
-    job_vectors = vectorizer.fit_transform(data["Skills"])
-
-    resume_vector = vectorizer.transform([resume])
+    job_vectors = vectorizer.fit_transform(data["Skills"].str.lower())
+    resume_vector = vectorizer.transform([resume.lower()])
 
     similarity = cosine_similarity(
         resume_vector,
