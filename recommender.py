@@ -27,9 +27,8 @@ def recommend(resume):
     )
 
 
-    job = result.iloc[0]["Job"]
+job = result.iloc[0]["Job"]
 
-    score = result.iloc[0]["score"] * 100
+score = result.iloc[0]["score"] * 100
 
-
-    return job, round(score,2)
+return job, round(score,2)    

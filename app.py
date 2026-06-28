@@ -33,5 +33,4 @@ job, score = recommend(resume_text)
 
 st.success("Recommended Job: " + job)
 
-st.info("Match Score: " + str(score) + "%")
-    
+st.info(f"Match Score: {score}%")
