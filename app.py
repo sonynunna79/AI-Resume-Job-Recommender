@@ -24,6 +24,10 @@ def recommend(resume):
 
         score = (match / len(skill_list)) * 100
 
+if "machine learning" in resume or "artificial intelligence" in resume or "ai" in resume:
+    if row["Job"] in ["AI Engineer", "ML Engineer"]:
+        score += 20
+
         if score >= best_score:
             best_score = score
             best_job = row["Job"]
