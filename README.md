@@ -53,3 +53,4 @@ pip install -r requirements.txt
 ## Author
 
 Your Nunna Tanmayi Priya
+https://ai-resume-job-recommender-de2ut9mqcexjen9l5hnpzy.streamlit.app/
