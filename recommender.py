@@ -27,5 +27,5 @@ def recommend(resume):
         if score > best_score:
             best_score = score
             best_job = row["Job"]
-
+    print("SCORE:", best_score)
     return best_job, round(best_score, 2)

@@ -1,36 +1,31 @@
-import streamlit as st
-
-from resume_parser import extract_text
-
-from recommender import recommend
+import pandas as pd
 
 
+def recommend(resume):
 
-st.title("AI Resume Analyzer & Job Recommendation System")
+    data = pd.read_csv("dataset/jobs.csv")
 
+    resume = resume.lower()
 
-st.write("Upload your resume PDF and get suitable job recommendations")
+    best_job = data.iloc[0]["Job"]
+    best_score = 0
 
+    for index, row in data.iterrows():
 
-file = st.file_uploader(
-    "Upload Resume PDF",
-    type="pdf"
-)
+        skills = str(row["Skills"]).lower()
 
+        skill_list = skills.replace(",", " ").split()
 
+        match = 0
 
-if file:
+        for skill in skill_list:
+            if skill in resume:
+                match += 1
 
-    resume_text = extract_text(file)
+        score = (match / len(skill_list)) * 100
 
+        if score >= best_score:
+            best_score = score
+            best_job = row["Job"]
 
-    st.subheader("Resume Extracted Successfully")
-
-
-    st.write(resume_text)
-resume_text = st.text_area("Paste your resume text")
-job, score = recommend(resume_text)
-
-st.success("Recommended Job: " + job)
-
-st.info(f"Match Score: {score}%")
+    return best_job, round(best_score,2)
