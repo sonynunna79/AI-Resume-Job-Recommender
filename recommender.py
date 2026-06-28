@@ -7,27 +7,28 @@ def recommend(resume):
 
     data = pd.read_csv("dataset/jobs.csv")
 
-    vectorizer = TfidfVectorizer()
+    # convert to lowercase
+    skills = data["Skills"].astype(str).str.lower()
 
-    job_vectors = vectorizer.fit_transform(data["Skills"].str.lower())
-    resume_vector = vectorizer.transform([resume.lower()])
+    resume = resume.lower()
+
+    vectorizer = TfidfVectorizer(
+        stop_words="english"
+    )
+
+    job_vectors = vectorizer.fit_transform(skills)
+
+    resume_vector = vectorizer.transform([resume])
 
     similarity = cosine_similarity(
         resume_vector,
         job_vectors
     )
 
-    data["score"] = similarity[0]
+    index = similarity.argmax()
 
+    job = data.iloc[index]["Job"]
 
-    result = data.sort_values(
-        by="score",
-        ascending=False
-    )
+    score = similarity[0][index] * 100
 
-
-job = result.iloc[0]["Job"]
-
-score = result.iloc[0]["score"] * 100
-
-return job, round(score,2)    
+    return job, round(score,2)
