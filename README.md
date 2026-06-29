@@ -13,7 +13,8 @@ The system extracts resume content, compares skills with available job descripti
 ✅ AI Based Skill Matching  
 ✅ Job Recommendation  
 ✅ Simple User Interface using Streamlit
-
+✅ Resume Match Score Prediction
+✅ Missing Skills Recommendation
 
 ## Technologies Used
 
@@ -21,9 +22,9 @@ The system extracts resume content, compares skills with available job descripti
 - Machine Learning
 - Natural Language Processing (NLP)
 - Streamlit
-- Scikit-learn
-- Pandas
-
+• Scikit-learn
+• Pandas
+• PDF Text Extraction
 
 ## Project Structure
 
