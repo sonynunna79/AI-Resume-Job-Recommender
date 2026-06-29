@@ -4,11 +4,11 @@ from pypdf import PdfReader
 from skills import find_missing_skills
 
 
-st.title("AI Resume Job Recommender")
+st.title("AI Resume Job Recommender 🤖")
 
 
 uploaded_file = st.file_uploader(
-    "Upload Resume",
+    "Upload Your Resume PDF",
     type=["pdf"]
 )
 
@@ -20,34 +20,44 @@ if uploaded_file is not None:
     resume_text = ""
 
     for page in reader.pages:
+
         text = page.extract_text()
 
         if text:
             resume_text += text
 
 
-    st.write("Resume uploaded successfully")
+    st.success("Resume uploaded successfully ✅")
 
 
     job, score = recommend(resume_text)
 
 
-    st.write("Recommended Job:", job)
+    st.subheader("Recommended Job")
 
-    st.write("Score:", score)
+    st.info(job)
+
+
+    st.subheader("Resume Match Score")
+
+    st.progress(score / 100)
+
+    st.success(f"Match Score: {score}%")
 
 
     missing = find_missing_skills(resume_text, job)
 
 
-    st.subheader("Skills to Improve")
+    st.subheader("Skills To Improve")
 
 
     if missing:
 
         for skill in missing:
+
             st.write("🔹", skill)
+
 
     else:
 
-        st.write("Great! Your skills match the job.")
+        st.write("Great! Your skills match the job 🎉")
