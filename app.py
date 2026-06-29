@@ -1,35 +1,53 @@
-import pandas as pd
+import streamlit as st
+from recommender import recommend
+from pypdf import PdfReader
+from skills import find_missing_skills
 
 
-def recommend(resume):
+st.title("AI Resume Job Recommender")
 
-    data = pd.read_csv("dataset/jobs.csv")
 
-    resume = resume.lower()
+uploaded_file = st.file_uploader(
+    "Upload Resume",
+    type=["pdf"]
+)
 
-    best_job = data.iloc[0]["Job"]
-    best_score = 0
 
-    for index, row in data.iterrows():
+if uploaded_file is not None:
 
-        skills = str(row["Skills"]).lower()
+    reader = PdfReader(uploaded_file)
 
-        skill_list = skills.replace(",", " ").split()
+    resume_text = ""
 
-        match = 0
+    for page in reader.pages:
+        text = page.extract_text()
 
-        for skill in skill_list:
-            if skill in resume:
-                match += 1
+        if text:
+            resume_text += text
 
-        score = (match / len(skill_list)) * 100
 
-if "machine learning" in resume or "artificial intelligence" in resume or "ai" in resume:
-    if row["Job"] in ["AI Engineer", "ML Engineer"]:
-        score += 20
+    st.write("Resume uploaded successfully")
 
-        if score >= best_score:
-            best_score = score
-            best_job = row["Job"]
 
-    return best_job, round(best_score,2)
+    job, score = recommend(resume_text)
+
+
+    st.write("Recommended Job:", job)
+
+    st.write("Score:", score)
+
+
+    missing = find_missing_skills(resume_text, job)
+
+
+    st.subheader("Skills to Improve")
+
+
+    if missing:
+
+        for skill in missing:
+            st.write("🔹", skill)
+
+    else:
+
+        st.write("Great! Your skills match the job.")
