@@ -1,31 +1,61 @@
 import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
-def recommend(resume):
+def recommend(resume_text):
 
-    data = pd.read_csv("dataset/jobs.csv")
+    jobs = [
+        {
+            "title": "AI Engineer",
+            "skills": "python machine learning deep learning tensorflow ai"
+        },
+        {
+            "title": "Data Analyst",
+            "skills": "python sql excel pandas data analysis"
+        },
+        {
+            "title": "Machine Learning Engineer",
+            "skills": "python machine learning algorithms neural networks"
+        },
+        {
+            "title": "Data Scientist",
+            "skills": "python statistics machine learning data science"
+        }
+    ]
 
-    resume = resume.lower()
+    job_titles = []
+    job_skills = []
 
-    best_job = ""
-    best_score = 0
+    for job in jobs:
+        job_titles.append(job["title"])
+        job_skills.append(job["skills"])
 
-    for index, row in data.iterrows():
 
-        skills = str(row["Skills"]).lower()
+    documents = [resume_text] + job_skills
 
-        skill_list = skills.split()
 
-        match = 0
+    vectorizer = TfidfVectorizer()
 
-        for skill in skill_list:
-            if skill in resume:
-                match += 1
+    vectors = vectorizer.fit_transform(documents)
 
-        score = (match / len(skill_list)) * 100
 
-        if score > best_score:
-            best_score = score
-            best_job = row["Job"]
-    print("SCORE:", best_score)
-    return best_job, round(best_score, 2)
+    similarity = cosine_similarity(
+        vectors[0:1],
+        vectors[1:]
+    )
+
+
+    scores = similarity[0]
+
+
+    best_index = scores.argmax()
+
+
+    best_job = job_titles[best_index]
+
+
+    score = round(scores[best_index] * 100, 2)
+
+
+    return best_job, score
