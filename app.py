@@ -38,34 +38,26 @@ if uploaded_file is not None:
     st.success("Resume uploaded successfully ✅")
 
 
-    job, score = recommend(resume_text)
+   recommendations = recommend(resume_text)
 
+st.subheader("🏆 Top 5 Job Recommendations")
 
-    st.subheader("Recommended Job")
+for job in recommendations:
 
-    st.info(job)
+    st.markdown(f"### 💼 {job['Job Title']}")
 
+    st.progress(job["Match Score"] / 100)
 
-    st.subheader("Resume Match Score")
+    st.success(f"Match Score: {job['Match Score']}%")
 
-    st.progress(score / 100)
+    missing = find_missing_skills(resume_text, job["Job Title"])
 
-    st.success(f"Match Score: {score}%")
-
-
-    missing = find_missing_skills(resume_text, job)
-
-
-    st.subheader("Skills To Improve")
-
+    st.write("**Skills To Improve:**")
 
     if missing:
-
         for skill in missing:
-
             st.write("🔹", skill)
-
-
     else:
+        st.write("🎉 Great! Your skills match this job.")
 
-        st.write("Great! Your skills match the job 🎉")
+    st.markdown("---")
