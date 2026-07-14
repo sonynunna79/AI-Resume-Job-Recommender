@@ -1,4 +1,5 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 from recommender import recommend
 from pypdf import PdfReader
 from skills import find_missing_skills
@@ -45,6 +46,24 @@ st.subheader("🏆 Top 5 Job Recommendations")
 for job in recommendations:
 
     st.markdown(f"### 💼 {job['Job Title']}")
+    st.subheader("📊 Skill Match Chart")
+
+job_names = []
+scores = []
+
+for job in recommendations:
+    job_names.append(job["Job Title"])
+    scores.append(job["Match Score"])
+
+fig, ax = plt.subplots()
+
+ax.bar(job_names, scores)
+
+plt.xticks(rotation=20)
+
+plt.ylabel("Match Score")
+
+st.pyplot(fig)
 
     st.progress(job["Match Score"] / 100)
 
