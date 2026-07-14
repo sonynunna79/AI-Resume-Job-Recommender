@@ -107,3 +107,33 @@ plt.xticks(rotation=20)
 plt.ylabel("Match Score (%)")
 
 st.pyplot(fig)
+pdf = FPDF()
+
+pdf.add_page()
+
+pdf.set_font("Arial", size=14)
+
+pdf.cell(0, 10, "AI Resume Recommendation Report", new_x="LMARGIN", new_y="NEXT")
+
+pdf.ln(5)
+
+for job in recommendations:
+
+    pdf.cell(
+        0,
+        10,
+        f"{job['Job Title']} - {job['Match Score']}%",
+        new_x="LMARGIN",
+        new_y="NEXT"
+    )
+
+pdf.output("Recommendation_Report.pdf")
+
+with open("Recommendation_Report.pdf", "rb") as pdf_file:
+
+    st.download_button(
+        label="📥 Download Recommendation Report",
+        data=pdf_file,
+        file_name="Recommendation_Report.pdf",
+        mime="application/pdf"
+    )
