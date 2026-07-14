@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from recommender import recommend
 from pypdf import PdfReader
 from skills import find_missing_skills
+from fpdf import FPDF
 
 course_map = {
     "python": "Python for Everybody",
