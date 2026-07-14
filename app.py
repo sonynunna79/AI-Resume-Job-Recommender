@@ -9,6 +9,13 @@ st.title("AI Resume Job Recommender 🤖")
 
 uploaded_file = st.file_uploader(
     resume_text = extract_text(uploaded_file)
+    st.subheader("📄 Resume Extracted Text")
+
+st.text_area(
+    "Resume Text",
+    resume_text,
+    height=300
+)
     "Upload Your Resume PDF",
     type=["pdf"]
 )
