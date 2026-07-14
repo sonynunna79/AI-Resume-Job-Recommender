@@ -39,101 +39,88 @@ if uploaded_file is not None:
 
     for page in reader.pages:
         text = page.extract_text()
-
         if text:
             resume_text += text
 
     st.success("✅ Resume uploaded successfully!")
 
     st.subheader("📄 Resume Extracted Text")
-
-    st.text_area(
-        "Resume Text",
-        resume_text,
-        height=250
-    )
+    st.text_area("Resume Text", resume_text, height=250)
 
     recommendations = recommend(resume_text)
+
     st.subheader("🏆 Top 5 Job Recommendations")
 
-for job in recommendations:
+    for job in recommendations:
 
-    st.markdown(f"## 💼 {job['Job Title']}")
+        st.markdown(f"## 💼 {job['Job Title']}")
 
-    st.progress(job["Match Score"] / 100)
+        st.progress(job["Match Score"] / 100)
 
-    st.success(f"Match Score: {job['Match Score']}%")
+        st.success(f"Match Score: {job['Match Score']}%")
 
-    missing = find_missing_skills(
-        resume_text,
-        job["Job Title"]
-    )
+        missing = find_missing_skills(
+            resume_text,
+            job["Job Title"]
+        )
 
-    st.write("### Skills To Improve")
+        st.write("### Skills To Improve")
 
-    if missing:
+        if missing:
 
-        for skill in missing:
+            for skill in missing:
 
-            st.write(f"🔹 {skill}")
+                st.write(f"🔹 {skill}")
 
-            if skill.lower() in course_map:
+                if skill.lower() in course_map:
+                    st.info(
+                        f"📚 Recommended Course: {course_map[skill.lower()]}"
+                    )
 
-                st.info(
-                    f"📚 Recommended Course: {course_map[skill.lower()]}"
-                )
+        else:
+            st.success("🎉 Great! Your skills match this job.")
 
-    else:
+        st.markdown("---")
 
-        st.success("🎉 Great! Your skills match this job.")
-
-    st.markdown("---")
     st.subheader("📊 Skill Match Chart")
 
-job_names = []
-scores = []
+    job_names = []
+    scores = []
 
-for job in recommendations:
+    for job in recommendations:
+        job_names.append(job["Job Title"])
+        scores.append(job["Match Score"])
 
-    job_names.append(job["Job Title"])
-    scores.append(job["Match Score"])
+    fig, ax = plt.subplots()
+    ax.bar(job_names, scores)
+    plt.xticks(rotation=20)
+    plt.ylabel("Match Score (%)")
 
-fig, ax = plt.subplots()
+    st.pyplot(fig)
 
-ax.bar(job_names, scores)
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=14)
 
-plt.xticks(rotation=20)
+    pdf.cell(190, 10, "AI Resume Recommendation Report", ln=True)
 
-plt.ylabel("Match Score (%)")
+    pdf.ln(5)
 
-st.pyplot(fig)
-pdf = FPDF()
+    for job in recommendations:
+        pdf.cell(
+            190,
+            10,
+            f"{job['Job Title']} - {job['Match Score']}%",
+            ln=True
+        )
 
-pdf.add_page()
+    pdf.output("Recommendation_Report.pdf")
 
-pdf.set_font("Arial", size=14)
+    with open("Recommendation_Report.pdf", "rb") as pdf_file:
 
-pdf.cell(0, 10, "AI Resume Recommendation Report", new_x="LMARGIN", new_y="NEXT")
-
-pdf.ln(5)
-
-for job in recommendations:
-
-    pdf.cell(
-        0,
-        10,
-        f"{job['Job Title']} - {job['Match Score']}%",
-        new_x="LMARGIN",
-        new_y="NEXT"
-    )
-
-pdf.output("Recommendation_Report.pdf")
-
-with open("Recommendation_Report.pdf", "rb") as pdf_file:
-
-    st.download_button(
-        label="📥 Download Recommendation Report",
-        data=pdf_file,
-        file_name="Recommendation_Report.pdf",
-        mime="application/pdf"
-    )
+        st.download_button(
+            label="📥 Download Recommendation Report",
+            data=pdf_file,
+            file_name="Recommendation_Report.pdf",
+            mime="application/pdf"
+        )
