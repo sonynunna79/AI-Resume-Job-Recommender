@@ -3,6 +3,18 @@ import matplotlib.pyplot as plt
 from recommender import recommend
 from pypdf import PdfReader
 from skills import find_missing_skills
+course_map = {
+    "python": "Python for Everybody",
+    "machine learning": "Machine Learning by Andrew Ng",
+    "deep learning": "Deep Learning Specialization",
+    "tensorflow": "TensorFlow Developer Certificate",
+    "sql": "SQL for Data Science",
+    "excel": "Microsoft Excel Essentials",
+    "pandas": "Pandas for Data Analysis",
+    "statistics": "Statistics for Data Science",
+    "data analysis": "Google Data Analytics",
+    "neural networks": "Neural Networks and Deep Learning"
+}
 
 
 st.title("AI Resume Job Recommender 🤖")
@@ -78,5 +90,7 @@ st.pyplot(fig)
             st.write("🔹", skill)
     else:
         st.write("🎉 Great! Your skills match this job.")
+        if skill.lower() in course_map:
+    st.write(f"📚 Recommended Course: {course_map[skill.lower()]}")
 
     st.markdown("---")
